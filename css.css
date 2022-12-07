@@ -1,10 +1,31 @@
 #grid{
     width: 100%;
-    height: fit-content;
+    height: 100vh;
+    border: 1px black solid;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 .row{
     display: flex;
+    justify-content: center;
 }
 .cell{
-    /* border: 1px black solid; */
+    height: 5px;
+    width: 5px;
+    transition: 0.6s;
+}
+.cellActive{
+    border-radius: 1em;
+    opacity: 1;
+}
+#counter{
+    position: fixed;
+    top: 0;
+    left : 0;
+    width: fit-content;
+    font-size: 1cm;
+    border: 1px black solid;
+    box-shadow: 1px 5px 20px black;
 }
