@@ -1,45 +1,149 @@
 const GRID_DIV = document.getElementById("grid");
 // const WIDTH = parseInt(prompt("Width? :"))
 // const HEIGHT = parseInt(prompt("Height? :"))
-const WIDTH = 50;
-const HEIGHT = 50;
-const CELL_HEIGHT = 50;
-const CELL_WIDTH = 50;
+const WIDTH = 500;
+const HEIGHT = 500;
+const CELL_HEIGHT = 5;
+const CELL_WIDTH = 5;
 const CELL_UNIT = "px";
+let globalGrid = [[], []];
 
-const COLORS = {
-    white: "#FFFFFF",
-    blue: "#FF"
+
+const COLORS = [
+    "#FFFFFF",
+    "#0000FF",
+    "#00FF00",
+    "#FF0000"
+]
+const COLORSMAP = {
+    "#FFFFFF" : 0,
+    "#0000FF" : 1,
+    "#00FF00" : 2,
+    "#FF0000" : 3
 }
-
 class Cell {
-    constructor(){
-        this.color = COLORS.white;
+    constructor(element){
+        this.color = COLORS[0];
         this.height = CELL_HEIGHT;
         this.width = CELL_WIDTH;
+        this.element = element;
+    }
+    nextColor(){
+        this.color = COLORS[modulo((COLORSMAP[this.color]+1),COLORS.length)];
+        this.element.style.backgroundColor = this.color;
     }
 }
+const DIRECTION = [
+    0,
+    1,
+    2,
+    3
+]
+const DIRECTIONMAP = {
+    0 : "up",
+    1 : "right",
+    2 : "down",
+    3 : "left"
+}
+let Ant = {
+    position : {
+        x : 0,
+        y : 0
+    },
+    direction : DIRECTION[0],
+    turnRight(){
+        this.direction = modulo(this.direction+1,4);
+        return this.direction;
+    },
+    turnLeft(){
+        this.direction = modulo(this.direction-1,4);
+        return this.direction;
+    }
+}
+function modulo(a,n){
+    return ((a % n ) + n ) % n
+}
+function initGrid(){
 
-//initialize grid
-let grid = [[], []];
-for (let i = 0; i < HEIGHT; i++) {
-    let row = document.createElement("div");
-    grid.push([])
-    
-    for (let j = 0; j < WIDTH; j++) {
-        grid[i].push(new Cell())
-        cell = document.cre
-        row.appendChild();
+    //initializes grid
+    for (let i = 0; i < HEIGHT; i++) {
+        let row = document.createElement("div");
+        row.classList.add("row");
+        globalGrid.push([])
         
+        for (let j = 0; j < WIDTH; j++) {
+            let cell = document.createElement("span");
+            cell.style.height = `${CELL_HEIGHT}${CELL_UNIT}`;
+            cell.style.width = `${CELL_WIDTH}${CELL_UNIT}`;
+            cell.style.backgroundColor = COLORS.white;
+            cell.classList.add("cell");
+            row.appendChild(cell);
+            globalGrid[i].push(new Cell(cell));
+            
+        }
+        GRID_DIV.appendChild(row);
     }
-    GRID_DIV.appendChild(row);
 }
 
 
-function step() {
-
+function rule(cell, ant){
+    if (COLORSMAP[cell.color]%2 == 0){
+        ant.turnLeft();
+    }
+    else{
+        ant.turnRight();
+    }
 }
 
-function display() {
 
+function moveAnt(){
+    let x = Ant.position.x;
+    let y =  Ant.position.y;
+
+    //Vertical
+    if (Ant.direction%2 == 0){
+        //Up
+        if (Ant.direction == 0)
+            Ant.position.y = modulo(y+1, HEIGHT);
+        //Down
+        else
+            Ant.position.y = modulo(y-1, HEIGHT);
+    }    
+    //Horizontal
+    else{
+        //Right
+        if (Ant.direction == 1)
+            Ant.position.x = modulo(x+1, WIDTH);
+        //Left
+        else
+            Ant.position.x = modulo(x-1, WIDTH);
+    }
+}
+
+function step(times = 1) {
+
+    let x = Ant.position.x
+    let y = Ant.position.y;
+
+    let cell = globalGrid[x][y]
+
+    rule(cell, Ant);
+    
+    moveAnt();
+    cell.nextColor();
+    times -= 1;
+    if(times > 0)
+        step(times);
+    
+}
+
+function repeatStep(){
+    setTimeout(step, 100);
+}
+
+function main(){
+    Ant.position.x = Math.floor(WIDTH/2);
+    Ant.position.y = Math.floor(HEIGHT/2);
+    initGrid();
+    repeatStep();
 }

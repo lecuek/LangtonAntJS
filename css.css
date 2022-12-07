@@ -1,8 +1,10 @@
 #grid{
     width: 100%;
     height: fit-content;
-    display: grid;
 }
-#gridRow{
-
+.row{
+    display: flex;
+}
+.cell{
+    /* border: 1px black solid; */
 }
