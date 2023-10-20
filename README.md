@@ -1,6 +1,10 @@
 Small Javascript LangtonAnt's project with custom CSS i made during my boring javascript classes for fun.
 
-To start the script, open your browser's console and type : ```js main(speed)``` With "speed" being a little counterintuitive because it's the number of steps taken every... step.. Bigger means faster.
+To start the script, open your browser's console and type : 
+```js 
+main(speed)
+```
+With "speed" being a little counterintuitive because it's the number of steps taken every... step.. Bigger means faster.
 
 Works better on Chromium based browsers because of css animations for some reason.
 
